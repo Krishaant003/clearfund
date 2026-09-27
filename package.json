@@ -1,0 +1,24 @@
+{
+  "name": "money-flow-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "dev": "tsx agent/index.ts",
+    "seed": "tsx scripts/seed.ts",
+    "test": "node --import tsx --test agent/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
