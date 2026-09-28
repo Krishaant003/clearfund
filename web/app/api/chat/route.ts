@@ -3,6 +3,7 @@ import { google } from "@ai-sdk/google";
 import {
   convertToModelMessages,
   streamText,
+  stepCountIs,
   createUIMessageStreamResponse,
   toUIMessageStream,
   type InferUITools,
@@ -48,6 +49,7 @@ export async function POST(req: Request) {
     model: google("gemini-3.5-flash-lite"),
     maxRetries: 5,
     streamRetries: 2,
+    stopWhen: stepCountIs(8),
     system:
       "You trace US community foundation grants through re-granting intermediaries. " +
       "Cite the sourceObjectId for every grant claim you make. " +
