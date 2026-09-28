@@ -4,6 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useState } from "react";
 import type { ChatMessage } from "./api/chat/route";
+import { ChainTrace } from "@/components/ChainTrace";
 
 export default function Page() {
   const [input, setInput] = useState("");
@@ -22,6 +23,10 @@ export default function Page() {
               switch (part.type) {
                 case "text":
                   return <span key={`${message.id}-${i}`}>{part.text}</span>;
+                case "tool-traceChain":
+                  return part.state === "output-available" ? (
+                    <ChainTrace key={`${message.id}-${i}`} result={part.output} />
+                  ) : null;
                 default:
                   return null;
               }
