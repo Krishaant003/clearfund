@@ -13,6 +13,10 @@ export const sanityClient = createClient({
   token: requireEnv("SANITY_READ_TOKEN"),
   apiVersion: "2026-09-28",
   useCdn: false,
+  // @sanity/client retries 429/502/503 internally by default (maxRetries: 5).
+  // withBackoff is the one deliberate retry layer; disable the client's own
+  // so a sustained 429 doesn't trigger both layers stacked (~24 attempts).
+  maxRetries: 0,
 });
 
 export async function sanityQuery<T>(groqQuery: string, params: Record<string, unknown> = {}): Promise<T> {
