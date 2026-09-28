@@ -861,8 +861,11 @@ a diagram.
 - [ ] **Step 3: Set environment variables in Vercel**
   In the Vercel project's dashboard (Settings → Environment Variables), add:
   `SANITY_PROJECT_ID`, `SANITY_DATASET`, `SANITY_ORG_ID`,
-  `SANITY_CONTEXT_TOKEN`, `GOOGLE_GENERATIVE_AI_API_KEY` — same values as
-  the local `.env` (Vercel does not read repo `.env` files).
+  `SANITY_CONTEXT_TOKEN`, `SANITY_READ_TOKEN`, `GOOGLE_GENERATIVE_AI_API_KEY`
+  — same values as the local `.env` (Vercel does not read repo `.env`
+  files). **`SANITY_READ_TOKEN` was added by a Task 3 ruling after this
+  plan was written — `web/lib/sanity-client.ts` requires it; without it,
+  every `/api/chat` request fails.**
 - [ ] **Step 4: Deploy to production**
   Run: `npx vercel --prod`
   Expected: prints a live `https://*.vercel.app` URL.
