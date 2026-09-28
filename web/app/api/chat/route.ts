@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   const tools = { ...mcpTools, ...customTools };
 
   const result = streamText({
-    model: google("gemini-3.5-flash-lite"),
+    model: google("gemini-3.8-flash"),
     maxRetries: 5,
     streamRetries: 2,
     stopWhen: stepCountIs(8),

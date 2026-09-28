@@ -8,7 +8,7 @@ async function main() {
   const prompt = process.argv.slice(2).join(" ") || "Say hello in one sentence.";
 
   const { text } = await generateText({
-    model: google("gemini-3.5-flash-lite"),
+    model: google("gemini-3.8-flash"),
     prompt,
   });
 

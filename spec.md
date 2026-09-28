@@ -182,9 +182,12 @@ another `grant`, and reporting the chain with sources cited via
 ## 6. Agent architecture
 
 **Stack: TypeScript/Node, Vercel AI SDK, Google Gemini via `@ai-sdk/google`**
-(model: Gemini 3.5 Flash Lite — chosen for RPD headroom on the free tier over
-Gemini 3.6 Flash; verify current limits at aistudio.google.com/rate-limit
-before building, as Google does not publish a static free-tier table).
+(model: Gemini 3.8 Flash — originally spec'd as Gemini 3.5 Flash Lite for RPD
+headroom on the free tier, but 3.5 Flash Lite was hitting sustained `503
+high demand` errors during implementation and Google's own API now points
+callers of the deprecated `gemini-2.5-flash` at 3.8 Flash; verify current
+rate limits at aistudio.google.com/rate-limit before relying on this
+long-term, as Google does not publish a static free-tier table).
 
 **Why this switch from the original Python plan:** Sanity's official tooling
 (the `create-agent-with-sanity-context` skill, every reference
@@ -237,11 +240,19 @@ building):**
 
 ## 7. Rate limit constraints (plan around these, don't discover them mid-build)
 
-- **Gemini 3.5 Flash Lite free tier:** confirm live numbers at
-  aistudio.google.com/rate-limit before building (Google does not publish a
-  static table). At time of writing this was in the range of 15 RPM / 500
-  RPD — budget accordingly, since each agent turn costs 2+ model calls
-  (tool-call decision + synthesis), more for multi-hop chains.
+- **Gemini 3.8 Flash free tier: confirmed hard cap of 20 requests/day**,
+  total, shared across all usage of this model on this Google Cloud
+  project (`quotaId: GenerateRequestsPerDayPerProjectPerModel-FreeTier`,
+  hit live during implementation on 2026-09-28). This is drastically
+  tighter than the 15 RPM / 500 RPD figures originally quoted here for
+  3.5 Flash Lite (measured before the switch, no longer applicable). Since
+  each agent turn costs 2+ model calls, 20 RPD is roughly 8-10 user
+  messages/day, total — for the deployed demo AND all future testing
+  combined. Accepted as a known, explicitly documented limitation for the
+  submission write-up (human partner's call, given 3.5 Flash Lite was
+  hitting sustained `503 high demand` errors instead) — do not "discover"
+  this again; if judging needs more headroom, either enable billing on
+  the Google Cloud project or re-attempt 3.5 Flash Lite's availability.
 - **Sanity Context / project-level limits:** also check — other Path One
   submissions reported ~20 RPM shared across a whole Sanity project, which
   can be the tighter constraint depending on usage.
