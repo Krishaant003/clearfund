@@ -9,10 +9,19 @@ function extractStatusCode(error: unknown): number | undefined {
   return candidate.statusCode ?? candidate.status;
 }
 
+type HeadersLike = { get: (name: string) => string | null } | Record<string, string>;
+
+function readHeader(headers: HeadersLike, name: string): string | null | undefined {
+  return typeof (headers as { get?: unknown }).get === "function"
+    ? (headers as { get: (name: string) => string | null }).get(name)
+    : (headers as Record<string, string>)[name] ?? (headers as Record<string, string>)[name.toLowerCase()];
+}
+
 function extractRetryAfterMs(error: unknown): number | undefined {
   if (typeof error !== "object" || error === null) return undefined;
-  const response = (error as { response?: { headers?: { get: (name: string) => string | null } } }).response;
-  const value = response?.headers?.get("retry-after");
+  const response = (error as { response?: { headers?: HeadersLike } }).response;
+  if (!response?.headers) return undefined;
+  const value = readHeader(response.headers, "retry-after");
   if (!value) return undefined;
   const seconds = Number(value);
   return Number.isFinite(seconds) ? seconds * 1000 : undefined;
