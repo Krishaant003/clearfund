@@ -1,4 +1,4 @@
-import { createMCPClient } from "@ai-sdk/mcp";
+import { createMCPClient, type MCPClient } from "@ai-sdk/mcp";
 import { google } from "@ai-sdk/google";
 import {
   convertToModelMessages,
@@ -29,9 +29,10 @@ export async function POST(req: Request) {
   const contextToken = requireEnv("SANITY_CONTEXT_TOKEN");
   const mcpUrl = `https://api.sanity.io/v1/context/organizations/${orgId}/mcp/money-flow-agent`;
 
+  let mcpClient: MCPClient | undefined;
   let mcpTools: ToolSet = {};
   try {
-    const mcpClient = await createMCPClient({
+    mcpClient = await createMCPClient({
       transport: {
         type: "http",
         url: mcpUrl,
@@ -44,6 +45,7 @@ export async function POST(req: Request) {
   }
 
   const tools = { ...mcpTools, ...customTools };
+  const closeMcpClient = () => mcpClient?.close();
 
   const result = streamText({
     model: google("gemini-3.8-flash"),
@@ -56,6 +58,8 @@ export async function POST(req: Request) {
       "Use traceChain to answer questions about how many hops a donation takes before reaching a program.",
     messages: await convertToModelMessages(messages),
     tools,
+    onFinish: closeMcpClient,
+    onError: closeMcpClient,
   });
 
   return createUIMessageStreamResponse({
