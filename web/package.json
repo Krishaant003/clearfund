@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "test": "node --import tsx --test lib/*.test.ts app/api/chat/*.test.ts"
+    "test": "node --import tsx --test lib/*.test.ts app/api/chat/*.test.ts",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
