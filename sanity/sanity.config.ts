@@ -5,8 +5,8 @@ import { schemaTypes } from "./schemas";
 export default defineConfig({
   name: "default",
   title: "Money Flow Agent",
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID ?? "",
-  dataset: process.env.SANITY_STUDIO_DATASET ?? "production",
+  projectId: "vnc5zsa7",
+  dataset: "production",
   plugins: [structureTool()],
   schema: {
     types: schemaTypes,
