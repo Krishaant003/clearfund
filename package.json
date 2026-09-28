@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.82",
+    "@duckdb/node-api": "^1.5.5-r.5",
     "ai": "^7.0.118",
     "sanity": "^6.16.0"
   }
