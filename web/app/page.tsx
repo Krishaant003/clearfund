@@ -8,7 +8,7 @@ import { ChainTrace } from "@/components/ChainTrace";
 
 export default function Page() {
   const [input, setInput] = useState("");
-  const { messages, sendMessage } = useChat<ChatMessage>({
+  const { messages, sendMessage, status, error } = useChat<ChatMessage>({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
 
@@ -33,6 +33,13 @@ export default function Page() {
             })}
           </div>
         ))}
+        {status === "submitted" || status === "streaming" ? <p>Thinking...</p> : null}
+        {error ? (
+          <p role="alert">
+            Something went wrong answering that — this can happen if Gemini&apos;s daily free-tier quota is
+            exhausted. Try again later.
+          </p>
+        ) : null}
       </div>
       <input
         value={input}
