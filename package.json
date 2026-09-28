@@ -8,8 +8,9 @@
   },
   "scripts": {
     "build": "tsc --noEmit",
-    "dev": "tsx agent/index.ts",
+    "dev": "node --env-file=.env --import tsx agent/index.ts",
     "seed": "tsx scripts/seed.ts",
+    "seed:write": "node --env-file=.env --import tsx scripts/write-seed-data.ts",
     "test": "node --import tsx --test agent/*.test.ts"
   },
   "keywords": [],
@@ -24,6 +25,7 @@
   "dependencies": {
     "@ai-sdk/google": "^4.0.82",
     "@duckdb/node-api": "^1.5.5-r.5",
+    "@sanity/client": "^8.7.0",
     "ai": "^7.0.118",
     "sanity": "^6.16.0"
   }
