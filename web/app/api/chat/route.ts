@@ -29,8 +29,8 @@ export async function POST(req: Request) {
   const contextToken = requireEnv("SANITY_CONTEXT_TOKEN");
   const mcpUrl = `https://api.sanity.io/v1/context/organizations/${orgId}/mcp/money-flow-agent`;
 
-  let mcpClient: MCPClient;
-  let mcpTools: ToolSet;
+  let mcpClient: MCPClient | undefined;
+  let mcpTools: ToolSet = {};
   try {
     mcpClient = await createMCPClient({
       transport: {
@@ -41,15 +41,11 @@ export async function POST(req: Request) {
     });
     mcpTools = await mcpClient.tools();
   } catch (error) {
-    console.error("Sanity Context MCP connection failed:", error);
-    return Response.json(
-      { error: "Could not reach the Sanity Context MCP endpoint, so the agent can't read the Knowledge Base." },
-      { status: 502 }
-    );
+    console.error("Sanity Context MCP connection failed, continuing with custom tools only:", error);
   }
 
   const tools = { ...mcpTools, ...customTools };
-  const closeMcpClient = () => mcpClient.close();
+  const closeMcpClient = () => mcpClient?.close();
 
   const result = streamText({
     model: google("gemini-3.1-flash-lite"),
@@ -58,9 +54,8 @@ export async function POST(req: Request) {
     stopWhen: stepCountIs(8),
     system:
       "You trace US community foundation grants through re-granting intermediaries. " +
-      "Answer by querying the Sanity Context Knowledge Base through the MCP tools first, and base your answer on what they return. " +
-      "Use traceChain only for multi-hop questions (how many hops a donation takes before reaching a program). " +
-      "Cite the sourceObjectId for every grant claim you make.",
+      "Cite the sourceObjectId for every grant claim you make. " +
+      "Use traceChain to answer questions about how many hops a donation takes before reaching a program.",
     messages: await convertToModelMessages(messages),
     tools,
     onFinish: closeMcpClient,
