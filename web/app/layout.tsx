@@ -6,7 +6,7 @@ const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-disp
 const body = Source_Sans_3({ subsets: ["latin"], variable: "--font-body" });
 
 export const metadata: Metadata = {
-  title: "Money Flow Agent",
+  title: "Clearfund",
   description: "Trace a donation through community foundations to the organizations that deliver programs.",
 };
 

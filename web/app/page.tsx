@@ -4,6 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Fragment, useEffect, useRef, useState } from "react";
 import type { ChatMessage } from "./api/chat/route";
+import { Logo } from "@/components/Logo";
 import { ChainTrace } from "@/components/ChainTrace";
 import { GrantTable, OrgChips, type GrantRow } from "@/components/GrantList";
 import { RichText, type FilingIndex } from "@/components/RichText";
@@ -86,7 +87,7 @@ export default function Page() {
   return (
     <div className="app">
       <header className="top">
-        <h1>Money Flow Agent</h1>
+        <h1><Logo /></h1>
         <p>Follow a community-foundation donation through each re-granting hop, with the filing behind every step.</p>
       </header>
 
