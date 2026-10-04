@@ -36,6 +36,8 @@ export interface ChainHop {
 export interface TraceChainResult {
   hops: ChainHop[];
   endedReason: "max_hops" | "no_further_grants";
+  // The starting funder's largest grants, so the UI can show the full spread rather than only the followed path.
+  startingGrants: GrantByFunderSummary[];
 }
 
 const getGrantsByFunder = tool({
@@ -88,6 +90,13 @@ const traceChain = tool({
   execute: async ({ startingEin, maxHops }): Promise<TraceChainResult> => {
     const hops: ChainHop[] = [];
     let currentEin = startingEin;
+    const startingGrants = await sanityQuery<GrantByFunderSummary[]>(
+      `*[_type == "grant" && funder->ein == $ein] | order(amountUsd desc) [0...10] {
+        amountUsd, taxYear, grantPurpose, matchTier, sourceObjectId,
+        "recipient": recipient->{ein, name}
+      }`,
+      { ein: startingEin }
+    );
 
     for (let i = 0; i < maxHops; i++) {
       const nextHop = await sanityQuery<ChainHop | null>(
@@ -100,14 +109,14 @@ const traceChain = tool({
       );
 
       if (!nextHop) {
-        return { hops, endedReason: "no_further_grants" };
+        return { hops, endedReason: "no_further_grants", startingGrants };
       }
 
       hops.push(nextHop);
       currentEin = nextHop.recipient.ein;
     }
 
-    return { hops, endedReason: "max_hops" };
+    return { hops, endedReason: "max_hops", startingGrants };
   },
 });
 
