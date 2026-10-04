@@ -48,7 +48,7 @@ export async function POST(req: Request) {
   const closeMcpClient = () => mcpClient?.close();
 
   const result = streamText({
-    model: google("gemini-3.8-flash"),
+    model: google("gemini-3.1-flash-lite"),
     maxRetries: 5,
     streamRetries: 2,
     stopWhen: stepCountIs(8),
