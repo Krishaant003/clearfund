@@ -25,11 +25,8 @@ Make the Sanity Context MCP endpoint (Knowledge Base mode) the agent's main way 
 - Served through the Context MCP endpoint (verify it exposes the new field) and shown as a table column.
 - **Dropped:** `purposeSectorMismatch` (reads as an accusation, conflicts with the neutral-transparency framing in spec.md §8, and would be noisy).
 
-## Open item (not yet approved)
-Part C: a comparison run of structured data vs a flattened copy to show the agent depends on the structure. Costs ~10-15 Gemini calls and a temporary second dataset. Needs a separate yes.
-
 ## Out of scope
-Deployment (the user does it last), README changes, model changes.
+Deployment (the user does it last), README changes, model changes, and the structured-vs-flat comparison run (Part C, declined by the user).
 
 ## Risks
 - Gemini 3.1 Flash Lite may not reliably prefer MCP tools; measure, and remove duplicate custom tools to force it if needed.
