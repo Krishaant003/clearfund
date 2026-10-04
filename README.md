@@ -123,26 +123,4 @@ smoke-testing and seeding, not the deployed product:
   Sanity client, custom tools) doesn't depend on Gemini and should always
   be reliable.
 
-## Deploying (Task 8 — not yet done)
 
-```bash
-cd web
-npx vercel        # link/create the Vercel project, root directory web/
-```
-
-In the Vercel project's dashboard (Settings → Environment Variables), set
-**all six** vars from `web/.env.local`: `SANITY_PROJECT_ID`,
-`SANITY_DATASET`, `SANITY_ORG_ID`, `SANITY_CONTEXT_TOKEN`,
-`SANITY_READ_TOKEN`, `GOOGLE_GENERATIVE_AI_API_KEY`. Missing
-`SANITY_READ_TOKEN` specifically will make every `/api/chat` request fail —
-it was added to the code after the original deploy checklist was written.
-
-Then `npx vercel --prod` and verify the flagship question works on the live
-URL.
-
-## Future work (optional stretch, explicitly deferred)
-
-Spec §11: classify `grant_purpose` into a `purposeCategory` taxonomy and
-derive a `purposeSectorMismatch` flag against recipient `nteeCode`. The spec
-says build this only after the full agent works end-to-end — which it now
-does — so this is the next thing to pick up if continuing past Task 8.
